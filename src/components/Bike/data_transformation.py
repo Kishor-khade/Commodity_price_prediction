@@ -9,7 +9,6 @@ from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder,StandardScaler
-# from category_encoders import 
 import category_encoders as ce
 
 from src.exception import CustomException
@@ -19,7 +18,7 @@ from src.utils import save_obj
 
 @dataclass
 class DataTransformationConfig:
-    preprocessor_obj_file_path = os.path.join('artifacts', "preprocessor.pkl")
+    preprocessor_obj_file_path = os.path.join('artifacts','Bike', "preprocessor.pkl")
     
 class DataTransformation:
     def __init__(self) -> None:

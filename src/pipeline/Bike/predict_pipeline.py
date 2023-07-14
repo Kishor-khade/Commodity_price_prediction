@@ -4,14 +4,14 @@ from src.exception import CustomException
 from src.utils import load_obj
 
 
-class PredictPipeline:
+class PredictPipeline_Bike:
     def __init__(self):
         pass
         
     def predict(self,features):
         try:
-            model_path = 'artifacts/model.pkl'
-            preprocessor_path = 'artifacts/preprocessor.pkl'
+            model_path = 'artifacts/Bike/model.pkl'
+            preprocessor_path = 'artifacts/Bike/preprocessor.pkl'
             model = load_obj(file_path=model_path)
             preprocessor = load_obj(file_path=preprocessor_path)        
             data_scaled = preprocessor.transform(features)
@@ -20,7 +20,7 @@ class PredictPipeline:
         except Exception as e:
             raise CustomException(e,sys)
     
-class CustomData:
+class BikeCustomData:
     def __init__(self, year:int, kms_driven:int,
                  cc_type:str, fuel_type:str, 
                  ownership:str, company:str, place:str):
