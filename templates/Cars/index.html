@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+        <style>
+            footer {
+                /* padding: 15px; */
+                color: #f4f6fd;
+                font-size: 14px;
+                position: relative;;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                /* z-index: 9999; */
+                background: #040b14;
+            }
+
+        </style>
+        <script>
+            var CompanyObject = {
+                "BMW": ['3 Series',],
+                "Datsun": ['Go','Go Plus','Redi Go',],
+                "Ford": ['Ecosport','Endeavour','FREESTYLE','Figo Aspire','New Figo',],
+                "Honda": ['Accord','Amaze','BR-V','Brio','CRV','City','Civic','Jazz','WR-V',],
+                "Hyundai": ['ALCAZAR','AURA','Creta','Elite i20','Eon','GRAND I10 NIOS','Grand i10','NEW I20','NEW I20 N LINE','NEW SANTRO','New Elantra','Santro Xing','Sonata','Tucson New','VENUE','Verna','Xcent','i10','i20','i20 Active',],
+                "Jeep": ['Compass','GRAND CHEROKEE',],
+                "KIA": ['CARENS','SELTOS','SONET',],
+                "MG": ['HECTOR','HECTOR PLUS',],
+                "Mahindra": ['BOLERO NEO','Bolero','KUV 100 NXT','Kuv100','MARAZZO','Scorpio','TUV 300 PLUS','TUV300','Thar','XUV 3OO','XUV500','XUV700',],
+                "Maruti": ['A Star','Alto','Alto 800','Alto K10','BREZZA','Baleno','Celerio','Celerio X','Ciaz','Dzire','Eeco','Ertiga','IGNIS','New Wagon-R','OMNI E','Ritz','S Cross','S PRESSO','Swift','Swift Dzire','Vitara Brezza','Wagon R','Wagon R 1.0','Wagon R Stingray','XL6','Zen Estilo',],
+                "Nissan": ['MAGNITE','Micra','Micra Active','Sunny','Terrano',],
+                "Renault": ['Captur','Duster','Kiger','Kwid','Pulse','TRIBER',],
+                "Skoda": ['KUSHAQ','Octavia','Rapid','SLAVIA',],
+                "Tata": ['ALTROZ','Bolt','Harrier','Hexa','NEXON','PUNCH','Safari','TIAGO NRG','TIGOR','Tiago','Zest',],
+                "Toyota": ['Camry','Corolla Altis','Etios','Etios Liva','Fortuner','Glanza','Innova','Innova Crysta','URBAN CRUISER','YARIS',],
+                "Volkswagen": ['Ameo','Jetta','Polo','T-ROC','TAIGUN','TIGUAN','Vento',],
+            }
+            window.onload = function() {
+                var companySel = document.getElementById("company");
+                var modelSel = document.getElementById("model");
+                for (var x in CompanyObject){
+                    companySel.options[companySel.options.length] = new Option(x, x);
+                }
+                companySel.onchange = function() {
+                    modelSel.length = 1;
+                    var z = CompanyObject[this.value];
+                    for (var y in CompanyObject[this.value]) {
+                        modelSel.options[modelSel.options.length] = new Option(z[y], z[y]);
+                    }
+                }
+            }
+            
+            </script>
+            
+    </head>
+    <body class="bg-secondary-subtle">
+        <nav class="navbar sticky-bottom navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+            <div class="container-fluid">
+                <!-- First button -->
+                <a class="navbar-brand" href="/">Commodity Price Pred</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <!-- Second DropDown -->
+                <div class="collapse navbar-collapse">
+                    <div class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <div class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" style="color: rgb(255, 255, 255);"
+                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Jump to
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/predictcardata">Car Price Prediction</a></li>
+                                <li><a class="dropdown-item" href="/predictbikedata">Bike Price Prediction</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </nav>
+
+
+        <h1 class="container-md shadow p-3 mb-5 bg-body-tertiary rounded " style="text-align: center;">
+            Car Price Prediction
+        </h1>
+        <br>
+
+        <form  class="container-sm" action="{{ url_for('predict_car_data')}}" method="POST">
+
+            <!-- Company -->
+            <div class="row mb-4">
+                <label for="company" class="col-sm-2 col-form-label">Company</label>
+                <div class="col-sm-5 ">
+                    <select class="form-control " name="company" id="company" placeholder="Enter your Car Company" required>
+                        <option class="placeholder" selected disabled value="">Select your Car Company</option>
+                        <option value=''></option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Model -->
+            <div class="row mb-4">
+                <label for="company" class="col-sm-2 col-form-label">Model</label>
+                <div class="col-sm-5 ">
+                    <select class="form-control " name="model" id="model" placeholder="Enter your Car Company" required>
+                        <option class="placeholder" selected disabled value="">Select your Car Model</option>
+                        <option value=''></option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Fuel Type -->
+            <div class="row mb-4">
+                <label class="col-form-label col-sm-2 pt-0">Fuel Type</label>
+                <div class="col-sm-10">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="fuel_type" id="gridRadios1" value="Petrol"
+                            checked>
+                        <label class="form-check-label" for="gridRadios1">
+                            Petrol
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="fuel_type" id="gridRadios2" value="Diesel">
+                        <label class="form-check-label" for="gridRadios2">
+                            Diesel
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="fuel_type" id="gridRadios2" value="CNG">
+                        <label class="form-check-label" for="gridRadios2">
+                            CNG
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transmission -->
+            <div class="row mb-4">
+                <label class="col-form-label col-sm-2 pt-0">Gear Transmission</label>
+                <div class="col-sm-10">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="transmission" id="gridRadios1" value="Automatic" checked>
+                        <label class="form-check-label" for="gridRadios1">
+                            Automatic
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="transmission" id="gridRadios2" value="Manual">
+                        <label class="form-check-label" for="gridRadios2">
+                            Manual
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Model Year -->
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Model year</label>
+                <div class="col-sm-5">
+                    <input class="form-control" type="number" name="year" placeholder="Enter your Model year" min='2010'
+                        max='2022' />
+                </div>
+            </div>
+
+            <!-- Ownership -->
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Ownership Type</label>
+                <div class="col-sm-5">
+                    <select class="form-control" name="ownership" placeholder="Enter you Lunch" required>
+                        <option class="placeholder" selected disabled value="">Select ownership Type</option>
+                        <option value="1st Owner">1st Owner</option>
+                        <option value="2nd Owner">2nd Owner</option>
+                        <option value="3rd Owner">3rd Owner</option>
+                        <option value="4th Owner">4th Owner</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Kms Driven -->
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Kilo Meters driven</label>
+                <div class="col-sm-5">
+                    <input class="form-control" type="number" name="kms_driven" placeholder="Enter kms driven" />
+                </div>
+            </div>
+
+            <!-- Area -->
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Select Area</label>
+                <div class="col-sm-5">
+                    <select class="form-control" name="area" placeholder="Enter you Lunch" required>
+                        <option class="placeholder" selected disabled value="">Select Nearby City</option>
+                        <option value='Ahmedabad'>Ahmedabad</option>
+                        <option value='Bengaluru'>Bengaluru</option>
+                        <option value='Chandigarh'>Chandigarh</option>
+                        <option value='Chennai'>Chennai</option>
+                        <option value='Coimbatore'>Coimbatore</option>
+                        <option value='Faridabad'>Faridabad</option>
+                        <option value='Ghaziabad'>Ghaziabad</option>
+                        <option value='Gurugram'>Gurugram</option>
+                        <option value='Hyderabad'>Hyderabad</option>
+                        <option value='Jaipur'>Jaipur</option>
+                        <option value='Kochi'>Kochi</option>
+                        <option value='Kolkata'>Kolkata</option>
+                        <option value='Lasudia Mori'>Lasudia Mori</option>
+                        <option value='Lucknow'>Lucknow</option>
+                        <option value='Ludhiana'>Ludhiana</option>
+                        <option value='Mansarovar'>Mansarovar</option>
+                        <option value='Mumbai'>Mumbai</option>
+                        <option value='Nagpur'>Nagpur</option>
+                        <option value='Nasik'>Nasik</option>
+                        <option value='Navi Mumbai'>Navi Mumbai</option>
+                        <option value='New Delhi'>New Delhi</option>
+                        <option value='Noida'>Noida</option>
+                        <option value='Patna'>Patna</option>
+                        <option value='Pune'>Pune</option>
+                        <option value='Rajkot'>Rajkot</option>
+                        <option value='Rohtak'>Rohtak</option>
+                        <option value='Surat'>Surat</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Area -->
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Select Passing(reg)</label>
+                <div class="col-sm-5">
+                    <select class="form-control" name="passing" placeholder="Enter you Lunch" required>
+                        <option class="placeholder" selected disabled value="">Select Number plate Passing</option>
+                        <option value='22-BH'>22-BH</option>
+                        <option value='AP-01'>AP-01</option>
+                        <option value='AP-07'>AP-07</option>
+                        <option value='AP-09'>AP-09</option>
+                        <option value='AP-10'>AP-10</option>
+                        <option value='AP-11'>AP-11</option>
+                        <option value='AP-13'>AP-13</option>
+                        <option value='AP-21'>AP-21</option>
+                        <option value='AP-22'>AP-22</option>
+                        <option value='AP-23'>AP-23</option>
+                        <option value='AP-28'>AP-28</option>
+                        <option value='AP-29'>AP-29</option>
+                        <option value='AP-30'>AP-30</option>
+                        <option value='AP-39'>AP-39</option>
+                        <option value='BR-01'>BR-01</option>
+                        <option value='BR-02'>BR-02</option>
+                        <option value='BR-06'>BR-06</option>
+                        <option value='BR-09'>BR-09</option>
+                        <option value='BR-31'>BR-31</option>
+                        <option value='CH-01'>CH-01</option>
+                        <option value='DL-10'>DL-10</option>
+                        <option value='DL-11'>DL-11</option>
+                        <option value='DL-12'>DL-12</option>
+                        <option value='DL-13'>DL-13</option>
+                        <option value='DL-14'>DL-14</option>
+                        <option value='DL-1C'>DL-1C</option>
+                        <option value='DL-2C'>DL-2C</option>
+                        <option value='DL-3C'>DL-3C</option>
+                        <option value='DL-4C'>DL-4C</option>
+                        <option value='DL-5C'>DL-5C</option>
+                        <option value='DL-6C'>DL-6C</option>
+                        <option value='DL-7C'>DL-7C</option>
+                        <option value='DL-8C'>DL-8C</option>
+                        <option value='DL-9C'>DL-9C</option>
+                        <option value='GJ-01'>GJ-01</option>
+                        <option value='GJ-02'>GJ-02</option>
+                        <option value='GJ-03'>GJ-03</option>
+                        <option value='GJ-04'>GJ-04</option>
+                        <option value='GJ-05'>GJ-05</option>
+                        <option value='GJ-06'>GJ-06</option>
+                        <option value='GJ-07'>GJ-07</option>
+                        <option value='GJ-08'>GJ-08</option>
+                        <option value='GJ-09'>GJ-09</option>
+                        <option value='GJ-10'>GJ-10</option>
+                        <option value='GJ-12'>GJ-12</option>
+                        <option value='GJ-13'>GJ-13</option>
+                        <option value='GJ-14'>GJ-14</option>
+                        <option value='GJ-15'>GJ-15</option>
+                        <option value='GJ-16'>GJ-16</option>
+                        <option value='GJ-17'>GJ-17</option>
+                        <option value='GJ-18'>GJ-18</option>
+                        <option value='GJ-19'>GJ-19</option>
+                        <option value='GJ-21'>GJ-21</option>
+                        <option value='GJ-22'>GJ-22</option>
+                        <option value='GJ-23'>GJ-23</option>
+                        <option value='GJ-24'>GJ-24</option>
+                        <option value='GJ-26'>GJ-26</option>
+                        <option value='GJ-27'>GJ-27</option>
+                        <option value='GJ-30'>GJ-30</option>
+                        <option value='GJ-31'>GJ-31</option>
+                        <option value='GJ-32'>GJ-32</option>
+                        <option value='GJ-34'>GJ-34</option>
+                        <option value='GJ-35'>GJ-35</option>
+                        <option value='GJ-36'>GJ-36</option>
+                        <option value='GJ-38'>GJ-38</option>
+                        <option value='HR-01'>HR-01</option>
+                        <option value='HR-02'>HR-02</option>
+                        <option value='HR-03'>HR-03</option>
+                        <option value='HR-05'>HR-05</option>
+                        <option value='HR-06'>HR-06</option>
+                        <option value='HR-07'>HR-07</option>
+                        <option value='HR-10'>HR-10</option>
+                        <option value='HR-11'>HR-11</option>
+                        <option value='HR-12'>HR-12</option>
+                        <option value='HR-13'>HR-13</option>
+                        <option value='HR-14'>HR-14</option>
+                        <option value='HR-16'>HR-16</option>
+                        <option value='HR-19'>HR-19</option>
+                        <option value='HR-20'>HR-20</option>
+                        <option value='HR-21'>HR-21</option>
+                        <option value='HR-22'>HR-22</option>
+                        <option value='HR-23'>HR-23</option>
+                        <option value='HR-24'>HR-24</option>
+                        <option value='HR-26'>HR-26</option>
+                        <option value='HR-27'>HR-27</option>
+                        <option value='HR-29'>HR-29</option>
+                        <option value='HR-30'>HR-30</option>
+                        <option value='HR-31'>HR-31</option>
+                        <option value='HR-34'>HR-34</option>
+                        <option value='HR-35'>HR-35</option>
+                        <option value='HR-36'>HR-36</option>
+                        <option value='HR-49'>HR-49</option>
+                        <option value='HR-50'>HR-50</option>
+                        <option value='HR-51'>HR-51</option>
+                        <option value='HR-52'>HR-52</option>
+                        <option value='HR-70'>HR-70</option>
+                        <option value='HR-72'>HR-72</option>
+                        <option value='HR-76'>HR-76</option>
+                        <option value='HR-77'>HR-77</option>
+                        <option value='HR-79'>HR-79</option>
+                        <option value='HR-80'>HR-80</option>
+                        <option value='HR-81'>HR-81</option>
+                        <option value='HR-82'>HR-82</option>
+                        <option value='HR-85'>HR-85</option>
+                        <option value='HR-87'>HR-87</option>
+                        <option value='HR-98'>HR-98</option>
+                        <option value='KA-01'>KA-01</option>
+                        <option value='KA-02'>KA-02</option>
+                        <option value='KA-03'>KA-03</option>
+                        <option value='KA-04'>KA-04</option>
+                        <option value='KA-05'>KA-05</option>
+                        <option value='KA-06'>KA-06</option>
+                        <option value='KA-07'>KA-07</option>
+                        <option value='KA-08'>KA-08</option>
+                        <option value='KA-09'>KA-09</option>
+                        <option value='KA-11'>KA-11</option>
+                        <option value='KA-12'>KA-12</option>
+                        <option value='KA-13'>KA-13</option>
+                        <option value='KA-14'>KA-14</option>
+                        <option value='KA-15'>KA-15</option>
+                        <option value='KA-16'>KA-16</option>
+                        <option value='KA-17'>KA-17</option>
+                        <option value='KA-18'>KA-18</option>
+                        <option value='KA-19'>KA-19</option>
+                        <option value='KA-20'>KA-20</option>
+                        <option value='KA-21'>KA-21</option>
+                        <option value='KA-22'>KA-22</option>
+                        <option value='KA-25'>KA-25</option>
+                        <option value='KA-26'>KA-26</option>
+                        <option value='KA-27'>KA-27</option>
+                        <option value='KA-28'>KA-28</option>
+                        <option value='KA-29'>KA-29</option>
+                        <option value='KA-30'>KA-30</option>
+                        <option value='KA-32'>KA-32</option>
+                        <option value='KA-34'>KA-34</option>
+                        <option value='KA-35'>KA-35</option>
+                        <option value='KA-36'>KA-36</option>
+                        <option value='KA-40'>KA-40</option>
+                        <option value='KA-41'>KA-41</option>
+                        <option value='KA-42'>KA-42</option>
+                        <option value='KA-43'>KA-43</option>
+                        <option value='KA-46'>KA-46</option>
+                        <option value='KA-47'>KA-47</option>
+                        <option value='KA-50'>KA-50</option>
+                        <option value='KA-51'>KA-51</option>
+                        <option value='KA-52'>KA-52</option>
+                        <option value='KA-53'>KA-53</option>
+                        <option value='KA-55'>KA-55</option>
+                        <option value='KA-59'>KA-59</option>
+                        <option value='KA-63'>KA-63</option>
+                        <option value='KA-64'>KA-64</option>
+                        <option value='KA-65'>KA-65</option>
+                        <option value='KA-68'>KA-68</option>
+                        <option value='KL-01'>KL-01</option>
+                        <option value='KL-02'>KL-02</option>
+                        <option value='KL-03'>KL-03</option>
+                        <option value='KL-04'>KL-04</option>
+                        <option value='KL-05'>KL-05</option>
+                        <option value='KL-07'>KL-07</option>
+                        <option value='KL-08'>KL-08</option>
+                        <option value='KL-09'>KL-09</option>
+                        <option value='KL-11'>KL-11</option>
+                        <option value='KL-14'>KL-14</option>
+                        <option value='KL-16'>KL-16</option>
+                        <option value='KL-17'>KL-17</option>
+                        <option value='KL-18'>KL-18</option>
+                        <option value='KL-21'>KL-21</option>
+                        <option value='KL-22'>KL-22</option>
+                        <option value='KL-24'>KL-24</option>
+                        <option value='KL-25'>KL-25</option>
+                        <option value='KL-27'>KL-27</option>
+                        <option value='KL-29'>KL-29</option>
+                        <option value='KL-32'>KL-32</option>
+                        <option value='KL-33'>KL-33</option>
+                        <option value='KL-34'>KL-34</option>
+                        <option value='KL-36'>KL-36</option>
+                        <option value='KL-37'>KL-37</option>
+                        <option value='KL-38'>KL-38</option>
+                        <option value='KL-39'>KL-39</option>
+                        <option value='KL-40'>KL-40</option>
+                        <option value='KL-41'>KL-41</option>
+                        <option value='KL-42'>KL-42</option>
+                        <option value='KL-43'>KL-43</option>
+                        <option value='KL-45'>KL-45</option>
+                        <option value='KL-46'>KL-46</option>
+                        <option value='KL-47'>KL-47</option>
+                        <option value='KL-48'>KL-48</option>
+                        <option value='KL-53'>KL-53</option>
+                        <option value='KL-54'>KL-54</option>
+                        <option value='KL-55'>KL-55</option>
+                        <option value='KL-62'>KL-62</option>
+                        <option value='KL-63'>KL-63</option>
+                        <option value='KL-64'>KL-64</option>
+                        <option value='KL-65'>KL-65</option>
+                        <option value='KL-66'>KL-66</option>
+                        <option value='KL-67'>KL-67</option>
+                        <option value='KL-72'>KL-72</option>
+                        <option value='KL-73'>KL-73</option>
+                        <option value='KL-75'>KL-75</option>
+                        <option value='KL-80'>KL-80</option>
+                        <option value='KL-82'>KL-82</option>
+                        <option value='MH-01'>MH-01</option>
+                        <option value='MH-02'>MH-02</option>
+                        <option value='MH-03'>MH-03</option>
+                        <option value='MH-04'>MH-04</option>
+                        <option value='MH-05'>MH-05</option>
+                        <option value='MH-06'>MH-06</option>
+                        <option value='MH-08'>MH-08</option>
+                        <option value='MH-09'>MH-09</option>
+                        <option value='MH-10'>MH-10</option>
+                        <option value='MH-11'>MH-11</option>
+                        <option value='MH-12'>MH-12</option>
+                        <option value='MH-13'>MH-13</option>
+                        <option value='MH-14'>MH-14</option>
+                        <option value='MH-15'>MH-15</option>
+                        <option value='MH-16'>MH-16</option>
+                        <option value='MH-17'>MH-17</option>
+                        <option value='MH-18'>MH-18</option>
+                        <option value='MH-20'>MH-20</option>
+                        <option value='MH-24'>MH-24</option>
+                        <option value='MH-27'>MH-27</option>
+                        <option value='MH-28'>MH-28</option>
+                        <option value='MH-29'>MH-29</option>
+                        <option value='MH-31'>MH-31</option>
+                        <option value='MH-32'>MH-32</option>
+                        <option value='MH-34'>MH-34</option>
+                        <option value='MH-35'>MH-35</option>
+                        <option value='MH-36'>MH-36</option>
+                        <option value='MH-40'>MH-40</option>
+                        <option value='MH-41'>MH-41</option>
+                        <option value='MH-42'>MH-42</option>
+                        <option value='MH-43'>MH-43</option>
+                        <option value='MH-44'>MH-44</option>
+                        <option value='MH-46'>MH-46</option>
+                        <option value='MH-47'>MH-47</option>
+                        <option value='MH-48'>MH-48</option>
+                        <option value='MH-49'>MH-49</option>
+                        <option value='MH-50'>MH-50</option>
+                        <option value='MP-04'>MP-04</option>
+                        <option value='MP-05'>MP-05</option>
+                        <option value='MP-09'>MP-09</option>
+                        <option value='MP-11'>MP-11</option>
+                        <option value='MP-12'>MP-12</option>
+                        <option value='MP-13'>MP-13</option>
+                        <option value='MP-15'>MP-15</option>
+                        <option value='MP-16'>MP-16</option>
+                        <option value='MP-19'>MP-19</option>
+                        <option value='MP-20'>MP-20</option>
+                        <option value='MP-37'>MP-37</option>
+                        <option value='MP-41'>MP-41</option>
+                        <option value='MP-43'>MP-43</option>
+                        <option value='MP-48'>MP-48</option>
+                        <option value='PB-02'>PB-02</option>
+                        <option value='PB-03'>PB-03</option>
+                        <option value='PB-06'>PB-06</option>
+                        <option value='PB-07'>PB-07</option>
+                        <option value='PB-08'>PB-08</option>
+                        <option value='PB-09'>PB-09</option>
+                        <option value='PB-10'>PB-10</option>
+                        <option value='PB-12'>PB-12</option>
+                        <option value='PB-13'>PB-13</option>
+                        <option value='PB-19'>PB-19</option>
+                        <option value='PB-23'>PB-23</option>
+                        <option value='PB-27'>PB-27</option>
+                        <option value='PB-28'>PB-28</option>
+                        <option value='PB-29'>PB-29</option>
+                        <option value='PB-32'>PB-32</option>
+                        <option value='PB-36'>PB-36</option>
+                        <option value='PB-37'>PB-37</option>
+                        <option value='PB-39'>PB-39</option>
+                        <option value='PB-46'>PB-46</option>
+                        <option value='PB-56'>PB-56</option>
+                        <option value='PB-65'>PB-65</option>
+                        <option value='PB-70'>PB-70</option>
+                        <option value='PB-87'>PB-87</option>
+                        <option value='PB-91'>PB-91</option>
+                        <option value='RJ-01'>RJ-01</option>
+                        <option value='RJ-02'>RJ-02</option>
+                        <option value='RJ-05'>RJ-05</option>
+                        <option value='RJ-06'>RJ-06</option>
+                        <option value='RJ-07'>RJ-07</option>
+                        <option value='RJ-10'>RJ-10</option>
+                        <option value='RJ-13'>RJ-13</option>
+                        <option value='RJ-14'>RJ-14</option>
+                        <option value='RJ-18'>RJ-18</option>
+                        <option value='RJ-20'>RJ-20</option>
+                        <option value='RJ-21'>RJ-21</option>
+                        <option value='RJ-23'>RJ-23</option>
+                        <option value='RJ-27'>RJ-27</option>
+                        <option value='RJ-28'>RJ-28</option>
+                        <option value='RJ-29'>RJ-29</option>
+                        <option value='RJ-36'>RJ-36</option>
+                        <option value='RJ-40'>RJ-40</option>
+                        <option value='RJ-41'>RJ-41</option>
+                        <option value='RJ-45'>RJ-45</option>
+                        <option value='RJ-46'>RJ-46</option>
+                        <option value='RJ-47'>RJ-47</option>
+                        <option value='RJ-51'>RJ-51</option>
+                        <option value='RJ-53'>RJ-53</option>
+                        <option value='TN-01'>TN-01</option>
+                        <option value='TN-02'>TN-02</option>
+                        <option value='TN-03'>TN-03</option>
+                        <option value='TN-04'>TN-04</option>
+                        <option value='TN-05'>TN-05</option>
+                        <option value='TN-06'>TN-06</option>
+                        <option value='TN-07'>TN-07</option>
+                        <option value='TN-09'>TN-09</option>
+                        <option value='TN-10'>TN-10</option>
+                        <option value='TN-11'>TN-11</option>
+                        <option value='TN-12'>TN-12</option>
+                        <option value='TN-13'>TN-13</option>
+                        <option value='TN-14'>TN-14</option>
+                        <option value='TN-15'>TN-15</option>
+                        <option value='TN-18'>TN-18</option>
+                        <option value='TN-19'>TN-19</option>
+                        <option value='TN-20'>TN-20</option>
+                        <option value='TN-21'>TN-21</option>
+                        <option value='TN-22'>TN-22</option>
+                        <option value='TN-23'>TN-23</option>
+                        <option value='TN-24'>TN-24</option>
+                        <option value='TN-25'>TN-25</option>
+                        <option value='TN-29'>TN-29</option>
+                        <option value='TN-30'>TN-30</option>
+                        <option value='TN-31'>TN-31</option>
+                        <option value='TN-32'>TN-32</option>
+                        <option value='TN-33'>TN-33</option>
+                        <option value='TN-34'>TN-34</option>
+                        <option value='TN-37'>TN-37</option>
+                        <option value='TN-38'>TN-38</option>
+                        <option value='TN-39'>TN-39</option>
+                        <option value='TN-40'>TN-40</option>
+                        <option value='TN-42'>TN-42</option>
+                        <option value='TN-43'>TN-43</option>
+                        <option value='TN-45'>TN-45</option>
+                        <option value='TN-48'>TN-48</option>
+                        <option value='TN-49'>TN-49</option>
+                        <option value='TN-50'>TN-50</option>
+                        <option value='TN-52'>TN-52</option>
+                        <option value='TN-55'>TN-55</option>
+                        <option value='TN-56'>TN-56</option>
+                        <option value='TN-57'>TN-57</option>
+                        <option value='TN-58'>TN-58</option>
+                        <option value='TN-59'>TN-59</option>
+                        <option value='TN-60'>TN-60</option>
+                        <option value='TN-63'>TN-63</option>
+                        <option value='TN-64'>TN-64</option>
+                        <option value='TN-65'>TN-65</option>
+                        <option value='TN-66'>TN-66</option>
+                        <option value='TN-67'>TN-67</option>
+                        <option value='TN-68'>TN-68</option>
+                        <option value='TN-69'>TN-69</option>
+                        <option value='TN-70'>TN-70</option>
+                        <option value='TN-72'>TN-72</option>
+                        <option value='TN-73'>TN-73</option>
+                        <option value='TN-74'>TN-74</option>
+                        <option value='TN-75'>TN-75</option>
+                        <option value='TN-77'>TN-77</option>
+                        <option value='TN-78'>TN-78</option>
+                        <option value='TN-79'>TN-79</option>
+                        <option value='TN-81'>TN-81</option>
+                        <option value='TN-83'>TN-83</option>
+                        <option value='TN-85'>TN-85</option>
+                        <option value='TN-86'>TN-86</option>
+                        <option value='TN-87'>TN-87</option>
+                        <option value='TN-90'>TN-90</option>
+                        <option value='TN-91'>TN-91</option>
+                        <option value='TN-99'>TN-99</option>
+                        <option value='TS-01'>TS-01</option>
+                        <option value='TS-02'>TS-02</option>
+                        <option value='TS-03'>TS-03</option>
+                        <option value='TS-04'>TS-04</option>
+                        <option value='TS-05'>TS-05</option>
+                        <option value='TS-06'>TS-06</option>
+                        <option value='TS-07'>TS-07</option>
+                        <option value='TS-08'>TS-08</option>
+                        <option value='TS-09'>TS-09</option>
+                        <option value='TS-10'>TS-10</option>
+                        <option value='TS-11'>TS-11</option>
+                        <option value='TS-12'>TS-12</option>
+                        <option value='TS-13'>TS-13</option>
+                        <option value='TS-15'>TS-15</option>
+                        <option value='TS-16'>TS-16</option>
+                        <option value='TS-17'>TS-17</option>
+                        <option value='TS-18'>TS-18</option>
+                        <option value='TS-19'>TS-19</option>
+                        <option value='TS-22'>TS-22</option>
+                        <option value='TS-23'>TS-23</option>
+                        <option value='TS-25'>TS-25</option>
+                        <option value='TS-27'>TS-27</option>
+                        <option value='TS-28'>TS-28</option>
+                        <option value='TS-29'>TS-29</option>
+                        <option value='TS-30'>TS-30</option>
+                        <option value='TS-32'>TS-32</option>
+                        <option value='TS-33'>TS-33</option>
+                        <option value='TS-34'>TS-34</option>
+                        <option value='TS-35'>TS-35</option>
+                        <option value='TS-36'>TS-36</option>
+                        <option value='UP-13'>UP-13</option>
+                        <option value='UP-14'>UP-14</option>
+                        <option value='UP-15'>UP-15</option>
+                        <option value='UP-16'>UP-16</option>
+                        <option value='UP-21'>UP-21</option>
+                        <option value='UP-25'>UP-25</option>
+                        <option value='UP-27'>UP-27</option>
+                        <option value='UP-32'>UP-32</option>
+                        <option value='UP-33'>UP-33</option>
+                        <option value='UP-37'>UP-37</option>
+                        <option value='UP-40'>UP-40</option>
+                        <option value='UP-41'>UP-41</option>
+                        <option value='UP-42'>UP-42</option>
+                        <option value='UP-43'>UP-43</option>
+                        <option value='UP-44'>UP-44</option>
+                        <option value='UP-52'>UP-52</option>
+                        <option value='UP-53'>UP-53</option>
+                        <option value='UP-62'>UP-62</option>
+                        <option value='UP-63'>UP-63</option>
+                        <option value='UP-65'>UP-65</option>
+                        <option value='UP-67'>UP-67</option>
+                        <option value='UP-70'>UP-70</option>
+                        <option value='UP-72'>UP-72</option>
+                        <option value='UP-78'>UP-78</option>
+                        <option value='UP-80'>UP-80</option>
+                        <option value='UP-83'>UP-83</option>
+                        <option value='UP-85'>UP-85</option>
+                        <option value='WB-02'>WB-02</option>
+                        <option value='WB-06'>WB-06</option>
+                        <option value='WB-08'>WB-08</option>
+                        <option value='WB-10'>WB-10</option>
+                        <option value='WB-12'>WB-12</option>
+                        <option value='WB-16'>WB-16</option>
+                        <option value='WB-18'>WB-18</option>
+                        <option value='WB-20'>WB-20</option>
+                        <option value='WB-24'>WB-24</option>
+                        <option value='WB-26'>WB-26</option>
+                        <option value='WB-30'>WB-30</option>
+                        <option value='WB-32'>WB-32</option>
+                        <option value='WB-38'>WB-38</option>
+                        <option value='WB-40'>WB-40</option>
+                        <option value='WB-42'>WB-42</option>
+                        <option value='WB-44'>WB-44</option>
+                        <option value='WB-50'>WB-50</option>
+                        <option value='WB-66'>WB-66</option>
+                        <option value='WB-90'>WB-90</option>
+                        <option value='WB-98'>WB-98</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Submit btn -->
+            <div class="mb-3 row justify-content-md-center" ">
+
+                <input class="btn btn-primary text-center " type="submit" style="width: max-content;"
+                    value="Predict your Second Hand Car cost" required />
+            </div>
+        </form>
+        
+        <footer class="bg-dark text-center text-white " >
+            <!-- Copyright -->                
+            <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+                ©  2023  Copyright : 
+                <a class="text-white" href="https://kishor-khade.netlify.app/">Kishor-Khade</a>
+            </div>
+        </footer>
+
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+
+    </body>
+</html>
