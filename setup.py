@@ -12,7 +12,7 @@ def get_requirements(file_path:str)->List[str]:
     return requirements
 
 setup(
-    name='commodity-price-pred',
+    name='commoditypricepredict',
     version='0.0.1',
     author='Kishor',
     author_email='kishorkhade5105@gmail.com',
