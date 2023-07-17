@@ -37,7 +37,7 @@ def predict_bike_data():
             cc_type = request.form.get('cc_type'),
         )
         pred_df = data.get_data_as_dataframe()
-        print(pred_df)
+        # print(pred_df)
         
         predict_pipeline = PredictPipeline_Bike()
         result = predict_pipeline.predict(pred_df)
