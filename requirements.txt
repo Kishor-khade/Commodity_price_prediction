@@ -2,11 +2,11 @@ pandas
 numpy
 seaborn
 matplotlib
-scikit-learn==1.3.0
-catboost==1.2
-xgboost==1.7.6
-category-encoders==2.6.1
+scikit-learn
+catboost
+xgboost
+category-encoders
 flask
-gunicorn==20.1.0
-dill==0.3.6
+gunicorn
+dill
 -e .
