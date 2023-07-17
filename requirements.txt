@@ -1,11 +1,12 @@
-pandas
-numpy
-seaborn
-matplotlib
-scikit-learn
-catboost
-xgboost
-category_encoders
-dill
+pandas==2.0.3
+numpy==1.24.4
+seaborn==0.12.2
+matplotlib==3.7.2
+scikit-learn==1.3.0
+catboost==1.2
+xgboost==1.7.6
+category-encoders==2.6.1
 flask
+gunicorn==20.1.0
+dill==0.3.6
 -e .
